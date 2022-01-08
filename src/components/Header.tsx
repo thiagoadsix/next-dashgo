@@ -7,7 +7,11 @@ import {
   Box,
   Avatar
 } from '@chakra-ui/react'
-import { RiNotificationLine, RiSearchLine, RiUserAddLine } from 'react-icons/ri'
+import {
+  RiNotificationLine,
+  RiSearchLine,
+  RiUserAddLine
+} from 'react-icons/ri'
 
 export function Header() {
   return (
