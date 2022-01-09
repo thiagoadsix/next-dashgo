@@ -10,6 +10,7 @@ import {
 import { Header } from '../../components/Header';
 import { Sidebar } from '../../components/Sidebar';
 import { Input } from '../../components/Form/Input';
+import Link from 'next/link';
 
 export default function CreteUser() {
   return (
@@ -38,7 +39,9 @@ export default function CreteUser() {
 
           <Flex marginTop="8" justifyContent="flex-end">
             <Stack direction="row" spacing="4">
-              <Button colorScheme="whiteAlpha">Cancelar</Button>
+              <Link href="/users" passHref={true}>
+                <Button as="a" colorScheme="whiteAlpha">Cancelar</Button>
+              </Link>
               <Button colorScheme="pink">Salvar</Button>
             </Stack>
           </Flex>
