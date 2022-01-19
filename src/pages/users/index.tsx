@@ -5,6 +5,7 @@ import {
   Flex,
   Heading,
   Icon,
+  Spinner,
   Table,
   Tbody,
   Td,
@@ -15,24 +16,23 @@ import {
   useBreakpointValue
 } from '@chakra-ui/react';
 import Link from 'next/link';
-import { useEffect } from 'react';
 import { RiAddLine, RiPencilLine } from 'react-icons/ri';
+import { useQuery } from 'react-query'
 
 import { Header } from '../../components/Header';
 import { Pagination } from '../../components/Pagination';
 import { Sidebar } from '../../components/Sidebar';
 
 export default function Users() {
+  const { data, isLoading, error } = useQuery('users', async () => {
+    const response = await fetch('http:localhost:3000/api/users')
+    return await response.json()
+  })
+
   const isWideVersion = useBreakpointValue({
     base: false,
     lg: true
   })
-
-  useEffect(() => {
-    fetch('http:localhost:3000/api/users')
-      .then(resp => resp.json())
-      .then(console.log)
-  }, [])
 
   return (
     <Box>
@@ -54,51 +54,65 @@ export default function Users() {
             </Link>
           </Flex>
 
-          <Table colorScheme="whiteAlpha">
-            <Thead>
-              <Tr>
-                <Th paddingX={["4", "4", "6"]} color="gray.300" width="8">
-                  <Checkbox colorScheme="pink" />
-                </Th>
-                <Th>
-                  Usuário
-                </Th>
-                {
-                  isWideVersion && (<Th>Data de cadastro</Th>)
-                }
-                {
-                  isWideVersion && (<Th width="8"></Th>)
-                }
-              </Tr>
-            </Thead>
-            <Tbody>
-              <Tr>
-                <Td paddingX={["4", "4", "6"]}>
-                  <Checkbox colorScheme="pink" />
-                </Td>
-                <Td>
-                  <Box>
-                    <Text fontWeight="bold">Thiago Andrade</Text>
-                    <Text fontSize="small" color="gray.300">thiago@email.com</Text>
-                  </Box>
-                </Td>
-                {
-                  isWideVersion && ( <Td>04de Janeiro, 2022</Td>)
-                }
-                {
-                  isWideVersion && (
-                    <Td>
-                      <Button as="a" size="sm" fontSize="small" colorScheme="purple" leftIcon={<Icon as={RiPencilLine} fontSize="16" />}>
-                        Editar 
-                      </Button>
-                    </Td>
-                  )
-                }
-              </Tr>
-            </Tbody>
-          </Table>
+          {
+            isLoading ? (
+              <Flex justifyContent="center">
+                <Spinner />
+              </Flex>
+            ) : error ? (
+              <Flex justifyContent="center">
+                <Text>Falha ao obter dados dos usuários.</Text>
+              </Flex>
+            ) : (
+              <>
+                <Table colorScheme="whiteAlpha">
+                  <Thead>
+                    <Tr>
+                      <Th paddingX={["4", "4", "6"]} color="gray.300" width="8">
+                        <Checkbox colorScheme="pink" />
+                      </Th>
+                      <Th>
+                        Usuário
+                      </Th>
+                      {
+                        isWideVersion && (<Th>Data de cadastro</Th>)
+                      }
+                      {
+                        isWideVersion && (<Th width="8"></Th>)
+                      }
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    <Tr>
+                      <Td paddingX={["4", "4", "6"]}>
+                        <Checkbox colorScheme="pink" />
+                      </Td>
+                      <Td>
+                        <Box>
+                          <Text fontWeight="bold">Thiago Andrade</Text>
+                          <Text fontSize="small" color="gray.300">thiago@email.com</Text>
+                        </Box>
+                      </Td>
+                      {
+                        isWideVersion && ( <Td>04de Janeiro, 2022</Td>)
+                      }
+                      {
+                        isWideVersion && (
+                          <Td>
+                            <Button as="a" size="sm" fontSize="small" colorScheme="purple" leftIcon={<Icon as={RiPencilLine} fontSize="16" />}>
+                              Editar 
+                            </Button>
+                          </Td>
+                        )
+                      }
+                    </Tr>
+                  </Tbody>
+                </Table>
 
-          <Pagination />
+                <Pagination />
+              </>
+            )
+          }
         </Box>
       </Flex>
     </Box>
